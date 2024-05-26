@@ -6,7 +6,7 @@ from dalle_2d_image import get_2d_image
 
 
 arena = Arena()
-for i in range(1, 100):
+for i in range(1, 1):
     arena.mutate_closer_to_fittests()
     sample = arena.get_most_fit()
     target_area = arena.target_area

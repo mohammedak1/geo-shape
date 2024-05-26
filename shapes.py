@@ -42,6 +42,7 @@ class Countires:
     def __normlize(self):
         for country, multi_polygon in self.polygons.items():
             self.areas[country] = multi_polygon.area
+            print(multi_polygon.area)
 
             all_coords = []
             for polygon in multi_polygon.geoms:
@@ -78,14 +79,15 @@ class Countires:
             self.polygons[country] = MultiPolygon(normlized_polygons)
 
     def get_scaled_countries(self, names, target_area):
-        countries = list(map(lambda name: self.polygons.get(name, None), names))       
-        #areas = np.array(list(map(lambda country: self.areas[country], countries)))
-        #min_area, max_area = areas.min(), areas.max()
+        areas = np.array(list(map(lambda country: self.areas[country], names)))
+        slice_areas = dict(zip(names, areas / areas.sum()))
+        print(slice_areas)
 
         scaled_countries = []
-        for multi_polygon_country in countries: 
+        for name in names: 
+            multi_polygon_country = self.polygons[name]
             current = multi_polygon_country.area
-            desired = target_area / len(countries)
+            desired = slice_areas[name] * target_area 
             factor = (desired / current) ** 0.5 
             changed = scale(multi_polygon_country, factor, factor)
             scaled_countries.append(changed) 
