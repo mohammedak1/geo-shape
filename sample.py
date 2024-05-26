@@ -24,29 +24,36 @@ class Sample:
         for country_multi_polygon in countries_multi_polygons:
             shape = Shape(country_multi_polygon)
             shape.center_to(target_polygon) 
-            print("x", shape.get_x(), "y", shape.get_y())
             self.shapes.append(shape)
     
     def copy_with_mutation(self):
         shapes = []
         for shape in self.shapes:
+           new_shape = Shape(shape.get_polygon())
            rate = self.change_rate
 
            percent = random.randint(1, 100)
            if percent <= 1:
              rate *= 5  
            elif percent <= 3:
-             rate *= 2 
+              rate *= 2 
            elif percent <= 5:
-             rate *= 1 
+              rate *= 1 
            else:
-               rate = 0 
-              
-           x = min(self.width ,max(0, random.randint(shape.get_x() - rate, shape.get_x() + rate))) 
-           y = min(self.height, max(0, random.randint(shape.get_y() - rate, shape.get_y() + rate)))
+              rate = 0 
+             
+           wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
+           wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
 
-           shape.set_pos(x, y)
-           shapes.append(shape)
+           x = min(self.width ,max(0, wild_x)) 
+           y = min(self.height, max(0, wild_y))
+
+           dx = new_shape.get_polygon().centroid.x - x
+           dy = new_shape.get_polygon().centroid.y - y
+
+
+           new_shape.set_pos(dx, dy)
+           shapes.append(new_shape)
         return Sample(self.target_area, shapes)
 
         
@@ -54,14 +61,17 @@ class Sample:
 
 class Shape:
     def __init__(self, multi_polygon):
-       self.multi_polygon  = multi_polygon
+       self.multi_polygon = multi_polygon
+
 
     def set_pos(self,x, y):
         self.multi_polygon = translate(self.multi_polygon, xoff=x, yoff=y)
 
     def center_to(self, target):
-        center = target.centroid
-        self.set_pos(center.x, center.y) 
+        current = self.multi_polygon.centroid
+        target = target.centroid
+
+        self.set_pos( target.x - current.x, target.y - current.y) 
 
     def get_polygon(self):
         return self.multi_polygon

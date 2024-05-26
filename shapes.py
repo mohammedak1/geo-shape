@@ -163,9 +163,10 @@ def full_draw(sample_shapes_ployes, shape_poly):
 def sample_draw(sample_shapes_ployes):
     plt.close('all')
     fig, ax = plt.subplots(constrained_layout=True)
-    for poly in sample_shapes_ployes:
-       x, y = poly.exterior.xy
-       ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
+    for multi_poly in sample_shapes_ployes:
+        for poly in multi_poly.geoms:
+            x, y = poly.exterior.xy
+            ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
 
     minx, miny, maxx, maxy = MultiPolygon(sample_shapes_ployes).bounds
     ax.set_xlim(minx - 10, maxx + 10)
