@@ -6,12 +6,12 @@ from dalle_2d_image import get_2d_image
 
 
 arena = Arena()
-for i in range(1, 1):
+for i in range(1, 100):
     arena.mutate_closer_to_fittests()
     sample = arena.get_most_fit()
     target_area = arena.target_area
 
-    area = fit_function(sample, arena.target_polygon)
+    area = int(fit_function(sample, arena.target_polygon))
     print(f"Generation: {i} Area: ({area}/ {target_area})")
 print("DONE")
 

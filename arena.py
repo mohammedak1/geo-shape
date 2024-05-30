@@ -9,16 +9,14 @@ from area import fit_function
 
 class Arena:
     samples_per_generation = 2000
-    take_top = 5
+    take_top = 100
     def __init__(self) -> None:
         self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
         self.target_area = int(self.target_polygon.area)
 
-        coutnries = Countires(250)
-        selected = coutnries.get_scaled_countries(
-            ["Iraq", "Iran (Islamic Republic of)", "United Arab Emirates"],
-            self.target_area)
+        coutnries = Countires(gride_side=250)
+        selected = coutnries.arab_countires(self.target_area)
         
         for _ in range(0, self.samples_per_generation):
             sample = Sample(self.target_area)

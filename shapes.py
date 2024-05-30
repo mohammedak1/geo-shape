@@ -42,7 +42,6 @@ class Countires:
     def __normlize(self):
         for country, multi_polygon in self.polygons.items():
             self.areas[country] = multi_polygon.area
-            print(multi_polygon.area)
 
             all_coords = []
             for polygon in multi_polygon.geoms:
@@ -81,7 +80,6 @@ class Countires:
     def get_scaled_countries(self, names, target_area):
         areas = np.array(list(map(lambda country: self.areas[country], names)))
         slice_areas = dict(zip(names, areas / areas.sum()))
-        print(slice_areas)
 
         scaled_countries = []
         for name in names: 
@@ -94,6 +92,33 @@ class Countires:
 
         return scaled_countries
 
+    def arab_countires(self, target_area):
+        arab_countries = [
+         "Morocco",
+         "Algeria",
+         "Sudan",
+         "Oman",
+         "Syrian Arab Republic",
+         "Yemen",
+         "Western Sahara",
+         "United Arab Emirates",
+         "Kuwait",
+         "Bahrain",
+         "Somalia",
+         "West Bank",
+         "Saudi Arabia",
+         "Egypt",
+         "Jordan",
+         "Qatar",
+         "Gaza Strip",
+         "Lebanon",
+         "Mauritania",
+         "Tunisia",
+         "Iraq",
+        ]
+
+        return self.get_scaled_countries(arab_countries, target_area)
+ 
 
 
             

@@ -6,7 +6,6 @@ import uuid
 class Sample:
     width = 250
     height = 250 
-    shapes_count = 70
     change_rate = 1
 
     def __init__(self, target_area , shapes=None):
@@ -34,13 +33,15 @@ class Sample:
 
            percent = random.randint(1, 100)
            if percent <= 1:
-             rate *= 5  
+             rate *= 90  
            elif percent <= 3:
-              rate *= 2 
+             rate *= 60 
            elif percent <= 5:
-              rate *= 1 
+             rate *= 40 
+           elif percent <= 10:
+             rate *= 10
            else:
-              rate = 0 
+              rate = 1 
              
            wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
            wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
