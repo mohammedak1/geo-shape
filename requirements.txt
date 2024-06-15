@@ -1,0 +1,7 @@
+opencv-python
+shapely
+openai
+matplotlib
+requests
+multiprocess
+
