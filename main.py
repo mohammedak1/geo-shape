@@ -7,12 +7,15 @@ from dalle_2d_image import get_2d_image
 import multiprocess as multi
 
 
+NUM_OF_GENERATIONS = 5
+
+
 if __name__ == '__main__':
     freeze_support()
     print("CPUS:", multiprocessing.cpu_count())
     #get_2d_image("cat playing with a ball") 
     arena = Arena()
-    for i in range(1, 5):
+    for i in range(1, NUM_OF_GENERATIONS):
         arena.mutate_closer_to_fittests()
         sample = arena.get_most_fit()
         target_area = arena.target_area
