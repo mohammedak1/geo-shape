@@ -10,14 +10,16 @@ import multiprocess as multi
 if __name__ == '__main__':
     freeze_support()
     print("CPUS:", multiprocessing.cpu_count())
+    #get_2d_image("cat playing with a ball") 
     arena = Arena()
-    for i in range(1, 500):
+    for i in range(1, 5):
         arena.mutate_closer_to_fittests()
         sample = arena.get_most_fit()
         target_area = arena.target_area
 
         area = int(fit_function(sample, arena.target_polygon))
-        print(f"Generation: {i} Area: ({area}/ {target_area})")
+        percentage = (area/target_area) * 100
+        print(f"Generation: {i}  Area: ({area}/ {target_area}) {percentage:.1f}%")
     print("DONE")
 
     most_fit = arena.get_most_fit().get_shapes_polygons()

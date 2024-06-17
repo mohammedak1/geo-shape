@@ -9,15 +9,15 @@ import multiprocess as multi
 from area import fit_function
 
 class Arena:
-    samples_per_generation = 20000
-    take_top = 20
+    samples_per_generation = 100
+    take_top =  6   
     def __init__(self) -> None:
         self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
         self.target_area = int(self.target_polygon.area)
 
         coutnries = Countires(gride_side=250)
-        selected = coutnries.arab_countires(self.target_area)
+        selected = coutnries.arab_countires(self.target_area * 1)
         
         for _ in range(0, self.samples_per_generation):
             sample = Sample(self.target_area)
@@ -25,7 +25,9 @@ class Arena:
             self.samples.append(sample)
 
     def mutate_closer_to_fittests(self):
+        print("Getting top samples")
         top_sampls = self.__get_top_intersections()
+        print("Mutating based on top samples")
         self.samples = self.__mutate_based_on_top(top_sampls)
     
     def get_most_fit(self):
@@ -56,7 +58,6 @@ class Arena:
         sampls_clusters = devide_based_on_cpus(number_of_cpus, self.samples)
         for samples in sampls_clusters:
             for sample in samples:
-                #TODO: improve
                 index_sampls[sample.id] = sample
             proc = multi.Process(target=self.get_top_intersection_multi, args=(samples, self.target_polygon, intersection_areas)) 
             procs.append(proc)

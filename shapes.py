@@ -185,17 +185,20 @@ def full_draw(sample_shapes_ployes, shape_poly):
     plt.title('Polygons Visualization')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig("temp/res_full.png")
 
 def sample_draw(sample_shapes_ployes):
     plt.close('all')
     fig, ax = plt.subplots(constrained_layout=True)
+    gemos = []
     for multi_poly in sample_shapes_ployes:
         for poly in multi_poly.geoms:
             x, y = poly.exterior.xy
             ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
+        gemos += multi_poly.geoms
 
-    minx, miny, maxx, maxy = MultiPolygon(sample_shapes_ployes).bounds
+
+    minx, miny, maxx, maxy = MultiPolygon(gemos).bounds
     ax.set_xlim(minx - 10, maxx + 10)
     ax.set_ylim(miny - 10, maxy + 10)
     ax.set_aspect('equal')
@@ -205,7 +208,7 @@ def sample_draw(sample_shapes_ployes):
     plt.title('Polygons Visualization')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig("temp/res_sample.png")
 
 
         

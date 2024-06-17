@@ -18,6 +18,16 @@ class Sample:
         
     def get_shapes_polygons(self):
         return list(map(lambda x: x.get_polygon(), self.shapes))
+    
+    def randomize_shapes(self, countries_multi_polygons):
+        for country_multi_polygon in countries_multi_polygons:
+            shape = Shape(country_multi_polygon)
+            x = random.randint(0, self.width)
+            y = random.randint(0, self.height)
+            
+            c = shape.get_polygon().centroid
+            shape.set_pos(x - c.x, y - c.y)
+            self.shapes.append(shape)
 
     def center_shapes(self, target_polygon, countries_multi_polygons):
         for country_multi_polygon in countries_multi_polygons:
@@ -33,15 +43,16 @@ class Sample:
 
            percent = random.randint(1, 100)
            if percent <= 1:
-             rate *= 90  
-           elif percent <= 3:
-             rate *= 60 
-           elif percent <= 5:
+             rate *= 120  
+           elif percent <= 2:
              rate *= 40 
-           elif percent <= 10:
-             rate *= 10
+           elif percent <= 5:
+             rate *= 20 
+           elif percent <= 9:
+             rate *= 2 
            else:
-              rate = 1 
+              shapes.append(new_shape)
+              continue
              
            wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
            wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
@@ -49,8 +60,8 @@ class Sample:
            x = min(self.width ,max(0, wild_x)) 
            y = min(self.height, max(0, wild_y))
 
-           dx = new_shape.get_polygon().centroid.x - x
-           dy = new_shape.get_polygon().centroid.y - y
+           dx =  x - shape.get_polygon().centroid.x
+           dy =  y - shape.get_polygon().centroid.y
 
 
            new_shape.set_pos(dx, dy)
