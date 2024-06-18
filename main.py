@@ -5,14 +5,14 @@ from area import fit_function
 from arena import Arena
 from dalle_2d_image import get_2d_image
 import multiprocess as multi
-from config import NUM_OF_GENERATIONS
+from config import NUM_OF_GENERATIONS, TARGET
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     progress = []
     freeze_support()
     print("CPUS:", multiprocessing.cpu_count())
-    #get_2d_image("cat playing with a ball") 
+    get_2d_image(TARGET) 
     arena = Arena()
     for i in range(1, NUM_OF_GENERATIONS):
         arena.mutate_closer_to_fittests()
