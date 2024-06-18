@@ -7,10 +7,9 @@ from shapes import get_shape_polygon, Countires
 import math
 import multiprocess as multi
 from area import fit_function
+from config import SAMPLES_PER_GENERATION, TAKE_TOP
 
 class Arena:
-    samples_per_generation = 100
-    take_top =  6   
     def __init__(self) -> None:
         self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
@@ -19,7 +18,7 @@ class Arena:
         coutnries = Countires(gride_side=250)
         selected = coutnries.arab_countires(self.target_area * 1)
         
-        for _ in range(0, self.samples_per_generation):
+        for _ in range(0, SAMPLES_PER_GENERATION):
             sample = Sample(self.target_area)
             sample.center_shapes(self.target_polygon, selected)
             self.samples.append(sample)
@@ -35,11 +34,11 @@ class Arena:
 
     def __mutate_based_on_top(self, top_sampls):
         new_samples = [] 
-        each_sample_legnth = math.floor(self.samples_per_generation / self.take_top)  
-        for i in range(0, self.take_top):
+        each_sample_legnth = math.floor(SAMPLES_PER_GENERATION / TAKE_TOP)  
+        for i in range(0, TAKE_TOP):
             number_of_sampls = each_sample_legnth
-            if i == self.take_top - 1:
-               number_of_sampls += self.samples_per_generation % self.take_top 
+            if i == TAKE_TOP - 1:
+               number_of_sampls += SAMPLES_PER_GENERATION % TAKE_TOP
 
             sample = top_sampls[i]
             for _ in range(0, number_of_sampls):
@@ -66,7 +65,7 @@ class Arena:
         for proc in procs:
             proc.join()
 
-        top = sorted(intersection_areas.items(), key= lambda x: x[1], reverse=True)[:self.take_top] 
+        top = sorted(intersection_areas.items(), key= lambda x: x[1], reverse=True)[:TAKE_TOP] 
         top_ids = list(map(lambda x: x[0], top))
         return list(map(lambda x: index_sampls[x], top_ids)) 
 

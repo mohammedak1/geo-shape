@@ -1,6 +1,6 @@
 import random
 from shapely import Polygon, MultiPolygon
-from shapely.affinity import translate
+from shapely.affinity import translate, rotate
 import uuid
 
 class Sample:
@@ -51,21 +51,37 @@ class Sample:
            elif percent <= 9:
              rate *= 2 
            else:
-              shapes.append(new_shape)
-              continue
-             
-           wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
-           wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
+              rate = 0
+           
+           if rate > 0:
+               wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
+               wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
 
-           x = min(self.width ,max(0, wild_x)) 
-           y = min(self.height, max(0, wild_y))
+               x = min(self.width ,max(0, wild_x)) 
+               y = min(self.height, max(0, wild_y))
 
-           dx =  x - shape.get_polygon().centroid.x
-           dy =  y - shape.get_polygon().centroid.y
+               dx =  x - shape.get_polygon().centroid.x
+               dy =  y - shape.get_polygon().centroid.y
 
+               new_shape.set_pos(dx, dy)
 
-           new_shape.set_pos(dx, dy)
+           angle_percent = random.randint(1, 100)
+           angle_change_rate = 0
+           if angle_percent <= 2:
+               angle_change_rate = 30
+           elif angle_percent <= 5:
+               angle_change_rate = 15
+           elif angle_percent <= 9:
+               angle_change_rate = 5
+            
+           if angle_change_rate > 0:
+                angle_change = random.randint(-angle_change_rate, angle_change_rate)
+                new_angle = shape.angle + angle_change
+
+                new_shape.set_angle(new_angle)
+                
            shapes.append(new_shape)
+            
         return Sample(self.target_area, shapes)
 
         
@@ -74,10 +90,14 @@ class Sample:
 class Shape:
     def __init__(self, multi_polygon):
        self.multi_polygon = multi_polygon
-
+       self.angle = 0
 
     def set_pos(self,x, y):
         self.multi_polygon = translate(self.multi_polygon, xoff=x, yoff=y)
+
+    def set_angle(self, angle):
+        self.multi_polygon = rotate(self.multi_polygon, angle, origin='centroid', use_radians=False)
+        self.angle = angle
 
     def center_to(self, target):
         current = self.multi_polygon.centroid
@@ -93,3 +113,4 @@ class Shape:
 
     def get_y(self):
         return int(self.multi_polygon.centroid.y)
+    

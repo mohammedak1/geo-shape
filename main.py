@@ -5,9 +5,10 @@ from area import fit_function
 from arena import Arena
 from dalle_2d_image import get_2d_image
 import multiprocess as multi
+from config import NUM_OF_GENERATIONS
 
 
-NUM_OF_GENERATIONS = 5
+
 
 
 if __name__ == '__main__':
