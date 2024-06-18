@@ -212,3 +212,9 @@ def sample_draw(sample_shapes_ployes):
 
 
         
+def progress_draw(progress):
+    plt.close('all')
+    plt.plot(progress)
+    plt.xlabel('Generation')
+    plt.ylabel('Percentage')
+    plt.savefig("temp/progress.png")

@@ -38,7 +38,7 @@ class Sample:
     def copy_with_mutation(self):
         shapes = []
         for shape in self.shapes:
-           new_shape = Shape(shape.get_polygon())
+           new_shape = Shape(shape.get_polygon(), shape.angle)
            rate = self.change_rate
 
            percent = random.randint(1, 100)
@@ -67,12 +67,14 @@ class Sample:
 
            angle_percent = random.randint(1, 100)
            angle_change_rate = 0
-           if angle_percent <= 2:
+           if angle_percent <= 1:
                angle_change_rate = 30
-           elif angle_percent <= 5:
+           elif angle_percent <= 2:
                angle_change_rate = 15
-           elif angle_percent <= 9:
+           elif angle_percent <= 4:
                angle_change_rate = 5
+           elif angle_percent <= 9:
+               angle_change_rate = 2
             
            if angle_change_rate > 0:
                 angle_change = random.randint(-angle_change_rate, angle_change_rate)
@@ -88,9 +90,9 @@ class Sample:
 
 
 class Shape:
-    def __init__(self, multi_polygon):
+    def __init__(self, multi_polygon, angle=0):
        self.multi_polygon = multi_polygon
-       self.angle = 0
+       self.angle = angle
 
     def set_pos(self,x, y):
         self.multi_polygon = translate(self.multi_polygon, xoff=x, yoff=y)
