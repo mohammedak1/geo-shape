@@ -1,7 +1,4 @@
-import matplotlib.pyplot as plt
-from shapely.ops import unary_union
-from shapely import Polygon, MultiPolygon, union_all
-from matplotlib.patches import Polygon as MplPolygon
+from shapely import  MultiPolygon, union_all
 
 
 def fit_function(sample, shape_polygon) :

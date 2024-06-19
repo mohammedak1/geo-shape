@@ -1,12 +1,10 @@
 import multiprocessing
 from multiprocessing.dummy import freeze_support
-from shapes import full_draw, sample_draw, progress_draw, Countires
-from area import fit_function
+from draw import full_draw, sample_draw, progress_draw
+from fit import fit_function
 from arena import Arena
 from dalle_2d_image import get_2d_image
-import multiprocess as multi
 from config import NUM_OF_GENERATIONS, TARGET
-import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     progress = []

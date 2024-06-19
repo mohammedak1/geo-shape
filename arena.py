@@ -6,11 +6,11 @@ from matplotlib.patches import Polygon as MplPolygon
 from shapes import get_shape_polygon, Countires
 import math
 import multiprocess as multi
-from area import fit_function
+from fit import fit_function
 from config import SAMPLES_PER_GENERATION, TAKE_TOP
 
 class Arena:
-    def __init__(self) -> None:
+    def __init__(self):
         self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
         self.target_area = int(self.target_polygon.area)
@@ -86,7 +86,7 @@ def devide_based_on_cpus(cpus, samples):
         if i < cpus - 1:
             end = start + base_size
         else:
-            end = n  # Include all remaining elements in the last subarray
+            end = n  
 
         subarrays.append(samples[start:end])
         start = end
@@ -96,5 +96,3 @@ def devide_based_on_cpus(cpus, samples):
         
 
 
-## N_Samples / N_Threads = 2000 / 8 = 250
-## Process Them Then Return Rres as a packages 
