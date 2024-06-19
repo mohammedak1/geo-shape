@@ -8,13 +8,12 @@ class Sample:
     height = 250 
     change_rate = 1
 
-    def __init__(self, target_area , shapes=None):
+    def __init__(self, shapes=None):
         if shapes is None:
             self.shapes = []
         else:
             self.shapes = shapes
         self.id = str(uuid.uuid1())
-        self.target_area = target_area
         
     def get_shapes_polygons(self):
         return list(map(lambda x: x.get_polygon(), self.shapes))
@@ -86,7 +85,7 @@ class Sample:
                 
            shapes.append(new_shape)
             
-        return Sample(self.target_area, shapes)
+        return Sample( shapes)
 
         
 
