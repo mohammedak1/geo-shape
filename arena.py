@@ -13,10 +13,10 @@ class Arena:
     def __init__(self) -> None:
         self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
-        self.target_area = int(self.target_polygon.area * .7)
+        self.target_area = int(self.target_polygon.area)
 
         coutnries = Countires(gride_side=250)
-        selected = coutnries.arab_countires(self.target_area)
+        selected = coutnries.all_countries(self.target_area)
         
         for _ in range(0, SAMPLES_PER_GENERATION):
             sample = Sample()

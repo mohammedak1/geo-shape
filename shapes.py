@@ -118,6 +118,10 @@ class Countires:
         ]
 
         return self.get_scaled_countries(arab_countries, target_area)
+
+    def all_countries(self, target_area):
+        names = list(self.polygons.keys())
+        return self.get_scaled_countries(names, target_area)
  
 
 
