@@ -43,13 +43,15 @@ class Sample:
 
            percent = random.randint(1, 100)
            if percent <= 1:
-             rate *= 120  
+              rate *= 120  
            elif percent <= 2:
-             rate *= 40 
+              rate *= 60 
            elif percent <= 5:
-             rate *= 20 
-           elif percent <= 9:
-             rate *= 2 
+              rate *= 40 
+           elif percent <= 7:
+              rate *= 20 
+           elif percent <= 12:
+              rate *= 5
            else:
               rate = 0
            
