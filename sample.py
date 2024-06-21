@@ -2,6 +2,7 @@ import random
 from shapely import Polygon, MultiPolygon
 from shapely.affinity import translate, rotate
 import uuid
+import numpy as np
 
 class Sample:
     width = 250
@@ -14,6 +15,8 @@ class Sample:
         else:
             self.shapes = shapes
         self.id = str(uuid.uuid1())
+
+        shapes_mtrx = np.matrix([])
         
     def get_shapes_polygons(self):
         return list(map(lambda x: x.get_polygon(), self.shapes))
