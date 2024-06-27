@@ -17,12 +17,26 @@ class Arena:
         self.target_area = int(self.target_polygon.area)
 
         coutnries = Countires(gride_side=250)
-        selected = coutnries.arab_countires(self.target_area)
+        selected = coutnries.all_countries(self.target_area)
         
         samples = []
         for _ in range(0, SAMPLES_PER_GENERATION):
             seq = np.zeros(shape=(58, 5, 2),  dtype=np.int32,)  
             side = 20
+            seq[:, 0, 0] = 140 #(x1)
+            seq[:, 0, 1] = 100 #(y1)
+
+            seq[:, 1, 0] = 140 #(x1)
+            seq[:, 1, 1] = 100 + side #(y1)
+
+            seq[:, 2, 0] = 140 + side #(x1)
+            seq[:, 2, 1] = 100 + side #(y1)
+
+            seq[:, 3, 0] = 140 + side #(x1)
+            seq[:, 3, 1] = 100 #(y1)
+
+            seq[:, 4, 0] = 140 #(x1)
+            seq[:, 4, 1] = 100 #(y1)
 
             samples.append(seq)
         self.samples = np.array(samples)
