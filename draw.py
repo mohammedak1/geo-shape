@@ -5,11 +5,10 @@ def full_draw(sample_shapes_ployes, shape_poly):
     fig, ax = plt.subplots(constrained_layout=True)
 
     all_polyes = []
-    for multi_polygon in sample_shapes_ployes:
-       for poly in multi_polygon.geoms:
-           all_polyes.append(poly)
-           x, y = poly.exterior.xy
-           ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
+    for poly in sample_shapes_ployes:
+        all_polyes.append(poly)
+        x, y = poly.exterior.xy
+        ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
     
     if shape_poly.geom_type == "MultiPolygon":
         for poly in shape_poly.geoms:
@@ -37,11 +36,10 @@ def sample_draw(sample_shapes_ployes):
     plt.close('all')
     fig, ax = plt.subplots(constrained_layout=True)
     gemos = []
-    for multi_poly in sample_shapes_ployes:
-        for poly in multi_poly.geoms:
-            x, y = poly.exterior.xy
-            ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
-        gemos += multi_poly.geoms
+    for poly in sample_shapes_ployes:
+        x, y = poly.exterior.xy
+        ax.fill(x, y, alpha=0.5, fc='lightblue', edgecolor='blue', label='')
+        gemos.append(poly)
 
 
     minx, miny, maxx, maxy = MultiPolygon(gemos).bounds

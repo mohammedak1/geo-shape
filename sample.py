@@ -1,8 +1,9 @@
 import random
-from shapely import Polygon, MultiPolygon
 from shapely.affinity import translate, rotate
 import uuid
 import numpy as np
+from shapely import Polygon, MultiPolygon
+
 
 class Sample:
     width = 250
@@ -11,15 +12,13 @@ class Sample:
 
     def __init__(self, shapes=None):
         if shapes is None:
-            self.shapes = []
-        else:
-            self.shapes = shapes
-        self.id = str(uuid.uuid1())
+            raise ValueError("Shapes Cant't Be None")
 
-        shapes_mtrx = np.matrix([])
+        self.shapes = shapes
+        self.id = str(uuid.uuid1())
         
-    def get_shapes_polygons(self):
-        return list(map(lambda x: x.get_polygon(), self.shapes))
+    def get_shapes_as_polygons(self):
+        return [Polygon(shape) for shape in self.shapes]
     
     def randomize_shapes(self, countries_multi_polygons):
         for country_multi_polygon in countries_multi_polygons:
@@ -38,16 +37,20 @@ class Sample:
             self.shapes.append(shape)
     
     def copy_with_mutation(self):
-        shapes = []
-        for shape in self.shapes:
-           new_shape = Shape(shape.get_polygon(), shape.angle)
+        shapes = np.copy(self.shapes)
+        length = len(shapes)
+        x_translate = np.random.uniform(-2, 2, length).astype(np.int32)
+        y_translate = np.random.uniform(-2, 2, length).astype(np.int32)
 
-           self.__mutate_location(shape, new_shape)
-           self.__mutate_rotation(shape, new_shape)
-                
-           shapes.append(new_shape)
-            
-        return Sample( shapes)
+        shapes[:, :, 0] += x_translate[:, np.newaxis]
+        shapes[:, :, 1] += y_translate[:, np.newaxis]
+
+        shapes[:, :, 0] = np.clip(shapes[:, :, 0], 0, 255)
+        shapes[:, :, 1] = np.clip(shapes[:, :, 1], 0, 255)
+        print(shapes[:, :, 0])
+
+
+        return Sample(shapes)
 
     def __mutate_rotation(self, shape, new_shape):
         angle_percent = random.randint(1, 100)
@@ -99,6 +102,7 @@ class Sample:
 
 class Shape:
     def __init__(self, multi_polygon, angle=0):
+       print("shape", multi_polygon.shape)
        self.multi_polygon = multi_polygon
        self.angle = angle
 

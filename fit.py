@@ -1,9 +1,8 @@
 from shapely import  MultiPolygon, union_all
 
 
-def fit_function(sample, shape_polygon) :
-    sample_polygons = sample.get_shapes_polygons()
-    connected_sample_polygons = union_all(sample_polygons)
+def fit_function(polygon, shape_polygon) :
+    connected_sample_polygons = union_all(polygon)
 
     intersection = None
     if connected_sample_polygons.geom_type == "Polygon":
@@ -14,15 +13,13 @@ def fit_function(sample, shape_polygon) :
     return clean.area 
 
 def clean_intersection(intersection):
-    res = []
-    for polygon in intersection:
-        if ( polygon.is_valid and not polygon.is_empty and
-             polygon.geom_type != "GeometryCollection" and
-             polygon.geom_type != "LineString"  and 
-             polygon.geom_type != "Point" and
-             polygon.geom_type != "MultiLineString" and 
-             polygon.geom_type != "MultiPoint" and 
-             polygon.geom_type != "MultiPolygon"
-           ):
-             res.append(polygon)
+    res = list(filter(
+         lambda polygon: (
+             polygon.is_valid and not polygon.is_empty and
+             polygon.geom_type not in {
+                 "GeometryCollection", "LineString", "Point", 
+                 "MultiLineString", "MultiPoint", "MultiPolygon"}
+         ), 
+         intersection
+    ))
     return MultiPolygon(res)

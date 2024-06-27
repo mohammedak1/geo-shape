@@ -1,5 +1,4 @@
 import multiprocessing
-import matplotlib.pyplot as plt
 from sample import Sample
 from shapely.ops import unary_union
 from matplotlib.patches import Polygon as MplPolygon
@@ -8,91 +7,74 @@ import math
 import multiprocess as multi
 from fit import fit_function
 from config import SAMPLES_PER_GENERATION, TAKE_TOP
+import numpy as np
+from shapely import Polygon, MultiPolygon
+from scipy.spatial import ConvexHull
 
 class Arena:
     def __init__(self):
-        self.samples = []
         self.target_polygon = get_shape_polygon("temp/img.png") 
         self.target_area = int(self.target_polygon.area)
 
         coutnries = Countires(gride_side=250)
-        selected = coutnries.all_countries(self.target_area)
+        selected = coutnries.arab_countires(self.target_area)
         
+        samples = []
         for _ in range(0, SAMPLES_PER_GENERATION):
-            sample = Sample()
-            sample.center_shapes(self.target_polygon, selected)
-            self.samples.append(sample)
+            seq = np.zeros(shape=(58, 5, 2),  dtype=np.int32,)  
+            side = 20
 
-    def mutate_closer_to_fittests(self):
-        print("Getting top samples")
-        top_sampls = self.__get_top_intersections()
-        print("Mutating based on top samples")
-        self.samples = self.__mutate_based_on_top(top_sampls)
-    
-    def get_most_fit(self):
-        return self.__get_top_intersections()[0]
+            samples.append(seq)
+        self.samples = np.array(samples)
+        self.top_area = 0
 
-    def __mutate_based_on_top(self, top_sampls):
-        new_samples = [] 
-        each_sample_legnth = math.floor(SAMPLES_PER_GENERATION / TAKE_TOP)  
-        for i in range(0, TAKE_TOP):
-            number_of_sampls = each_sample_legnth
-            if i == TAKE_TOP - 1:
-               number_of_sampls += SAMPLES_PER_GENERATION % TAKE_TOP
+    def pass_one_generation(self):
+        print("Mutiting")
+        self.__mutate()
+        print("Eliminting")
+        self.__update_if_found_better()
 
-            sample = top_sampls[i]
-            for _ in range(0, number_of_sampls):
-                mutated_sample = sample.copy_with_mutation()
-                new_samples.append(mutated_sample)
+    def __mutate(self):
+        shape = self.samples.shape
+        mutations = np.random.randint(-10, 2, size=(shape[0], shape[1], shape[3]))
+        mutations =  np.where(mutations < -2, 0, np.clip(mutations, -2, 2))
+        big_mutations = np.random.randint(-400, 40, size=(shape[0], shape[1], shape[3]))
+        big_mutations =  np.where(big_mutations < -40, 0, np.clip(big_mutations, -40, 40))
+        self.temp_samples = self.samples + mutations[:, :, np.newaxis, :] + big_mutations[:, :, np.newaxis, :]
 
-        return new_samples
-
-    def __get_top_intersections(self):
-        manager =  multi.Manager()
-        intersection_areas = manager.dict()
-        index_sampls = {}
-
-        procs = []
-        number_of_cpus = multiprocessing.cpu_count()
-        sampls_clusters = devide_based_on_cpus(number_of_cpus, self.samples)
-        for samples in sampls_clusters:
-            for sample in samples:
-                index_sampls[sample.id] = sample
-            proc = multi.Process(target=self.get_top_intersection_multi, args=(samples, self.target_polygon, intersection_areas)) 
-            procs.append(proc)
-            proc.start()
-
-        for proc in procs:
-            proc.join()
-
-        top = sorted(intersection_areas.items(), key= lambda x: x[1], reverse=True)[:TAKE_TOP] 
-        top_ids = list(map(lambda x: x[0], top))
-        return list(map(lambda x: index_sampls[x], top_ids)) 
-
-    def get_top_intersection_multi(self,samples, target, areas):
-        for sample in samples:
-            sample_fit = fit_function(sample, target)
-            areas[sample.id] = sample_fit
+        self.temp_samples = np.clip(self.temp_samples, 0, 255)
 
 
-def devide_based_on_cpus(cpus, samples):
-    n = len(samples)
-    base_size = n // cpus  
+        
+    def __update_if_found_better(self):
+        areas = np.array([self._evaluate_sample(sample) for sample in self.temp_samples])
+        top_n_indices = np.argpartition(-areas, TAKE_TOP)[:TAKE_TOP]
+        top_n_areas = areas[top_n_indices]
 
-    subarrays = []
-    start = 0
-
-    for i in range(cpus):
-        if i < cpus - 1:
-            end = start + base_size
-        else:
-            end = n  
-
-        subarrays.append(samples[start:end])
-        start = end
-
-    return subarrays
-            
+        #max_index = areas.index(top_mean)
+        #max_sample = self.temp_samples[max_index]
+        arrays = []
+        shape = self.temp_samples.shape
+        for index in top_n_indices:
+            sample = self.temp_samples[index]
+            arrays.append(np.full((shape[0] // TAKE_TOP, shape[1], shape[2], shape[3]), sample))
+        self.top_area = np.mean(top_n_areas)
+        self.samples = self.temp_samples
         
 
+    def _evaluate_sample(self, sample):
+        polygons = list(map(lambda x: Polygon(x), sample)) 
+        return fit_function(polygons, self.target_polygon)
 
+    def get_most_fit(self):
+        most = 0
+        sample = None
+        for value in self.samples:
+            area = self._evaluate_sample(value)
+            if area > most:
+                sample = value
+                most = area
+        return Sample(sample)
+
+    def get_top_area(self):
+        return self.top_area
