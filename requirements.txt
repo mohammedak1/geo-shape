@@ -6,3 +6,4 @@ requests
 multiprocess
 numpy<2
 scipy
+joblib

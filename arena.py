@@ -10,6 +10,8 @@ from config import SAMPLES_PER_GENERATION, TAKE_TOP
 import numpy as np
 from shapely import Polygon, MultiPolygon
 from scipy.spatial import ConvexHull
+from joblib import Parallel, delayed
+import time
 
 class Arena:
     def __init__(self):
@@ -68,7 +70,13 @@ class Arena:
 
         
     def __update_if_found_better(self):
-        areas = np.array([self._evaluate_sample(sample) for sample in self.temp_samples])
+        init_mill = time.time() * 1000
+        areas = Parallel(n_jobs=-1)(delayed(self._evaluate_sample)(sample) for sample in self.temp_samples)
+        areas = np.array(areas) 
+
+        after_mill = time.time() * 1000
+
+        print("Time taken to evaluate", int(after_mill - init_mill), " ms")
         top_n_indices = np.argpartition(-areas, TAKE_TOP)[:TAKE_TOP]
         top_n_areas = areas[top_n_indices]
 
