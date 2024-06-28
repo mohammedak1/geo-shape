@@ -52,9 +52,9 @@ class Arena:
 
     def __mutate(self):
         shape = self.samples.shape
-        mutations = np.random.randint(-70, 2, size=(shape[0], shape[1], shape[3]))
+        mutations = np.random.randint(-4000, 2, size=(shape[0], shape[1], shape[3]))
         mutations =  np.where(mutations < -2, 0, np.clip(mutations, -2, 2))
-        big_mutations = np.random.randint(-800, 40, size=(shape[0], shape[1], shape[3]))
+        big_mutations = np.random.randint(-12000, 40, size=(shape[0], shape[1], shape[3]))
         big_mutations =  np.where(big_mutations < -40, 0, np.clip(big_mutations, -40, 40))
         self.temp_samples = self.samples + mutations[:, :, np.newaxis, :] + big_mutations[:, :, np.newaxis, :]
 
@@ -80,8 +80,6 @@ class Arena:
         top_n_indices = np.argpartition(-areas, TAKE_TOP)[:TAKE_TOP]
         top_n_areas = areas[top_n_indices]
 
-        #max_index = areas.index(top_mean)
-        #max_sample = self.temp_samples[max_index]
         arrays = []
         shape = self.temp_samples.shape
         for index in top_n_indices:
