@@ -45,7 +45,6 @@ class Countires:
 
     def __normlize(self):
         for country, multi_polygon in self.polygons.items():
-            print(country)
             self.areas[country] = multi_polygon.area
             
             all_coords = multi_polygon.exterior.coords
@@ -73,6 +72,9 @@ class Countires:
             np_coords = np.array(coords)
             np_coords[:, 0] = ((np_coords[:, 0] - min_long) / long_range) * x_scale
             np_coords[:, 1] = ((np_coords[:, 1] - min_lat) / lat_range) * y_scale
+            #turn it into int
+            np_coords = np_coords.astype(np.float16)
+            print(np_coords)
 
             self.polygons[country] = Polygon(np_coords)
 

@@ -43,17 +43,16 @@ class Arena:
         self.top_area = 0
 
     def pass_one_generation(self):
-
-        print("Mutiting")
+        #print("Mutiting")
         self.__mutate()
-        print("Eliminting")
+        #print("Eliminting")
         self.__update_if_found_better()
 
     def __mutate(self):
         shape = self.samples.shape
-        mutations = np.random.randint(-1 * 10^5, 2, size=(shape[0], shape[1], shape[3]))
+        mutations = np.random.randint(-100, 2, size=(shape[0], shape[1], shape[3]))
         mutations =  np.where(mutations < -2, 0, np.clip(mutations, -2, 2))
-        big_mutations = np.random.randint(-3 * 10^5, 40, size=(shape[0], shape[1], shape[3]))
+        big_mutations = np.random.randint(-3000, 40, size=(shape[0], shape[1], shape[3]))
         big_mutations =  np.where(big_mutations < -40, 0, np.clip(big_mutations, -40, 40))
         self.temp_samples = self.samples + mutations[:, :, np.newaxis, :] + big_mutations[:, :, np.newaxis, :]
 
