@@ -20,10 +20,16 @@ class Countires:
             coords = geo_metray["coordinates"]
 
             multi_polygon_coords = self.__coords_to_multipolygon(coords)
-            if len(multi_polygon_coords) == 1:
-                self.polygons[name] = MultiPolygon(multi_polygon_coords)
-            else:
-                self.polygons[name] = MultiPolygon(multi_polygon_coords)
+            polygons = list(multi_polygon_coords)
+            biggest_area = 0
+            chosen_polygon = None
+            for polygon in polygons:
+                area = polygon.area
+                if area > biggest_area:
+                    biggest_area = area
+                    chosen_polygon = polygon
+            self.polygons[name] = chosen_polygon
+            
         self.__normlize() 
         file.close()  
 
@@ -39,11 +45,10 @@ class Countires:
 
     def __normlize(self):
         for country, multi_polygon in self.polygons.items():
+            print(country)
             self.areas[country] = multi_polygon.area
-
-            all_coords = []
-            for polygon in multi_polygon.geoms:
-                all_coords.extend(polygon.exterior.coords)
+            
+            all_coords = multi_polygon.exterior.coords
             np_array = np.array(all_coords)
 
             long = np_array[:, 0]
@@ -64,16 +69,12 @@ class Countires:
                 y_scale = self.grid_side_length
                 x_scale = self.grid_side_length * aspect_ratio
             
-            normlized_polygons = [] 
-            for polygon in multi_polygon.geoms:
-                 coords = polygon.exterior.coords
-                 np_coords = np.array(coords)
-                 np_coords[:, 0] = ((np_coords[:, 0] - min_long) / long_range) * x_scale
-                 np_coords[:, 1] = ((np_coords[:, 1] - min_lat) / lat_range) * y_scale
-                 
-                 normlized_polygons.append(Polygon(np_coords))
+            coords = multi_polygon.exterior.coords
+            np_coords = np.array(coords)
+            np_coords[:, 0] = ((np_coords[:, 0] - min_long) / long_range) * x_scale
+            np_coords[:, 1] = ((np_coords[:, 1] - min_lat) / lat_range) * y_scale
 
-            self.polygons[country] = MultiPolygon(normlized_polygons)
+            self.polygons[country] = Polygon(np_coords)
 
     def get_scaled_countries(self, names, target_area):
         areas = np.array(list(map(lambda country: self.areas[country], names)))

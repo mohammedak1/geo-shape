@@ -1,10 +1,9 @@
 import multiprocessing
 from multiprocessing.dummy import freeze_support
 from draw import full_draw, sample_draw, progress_draw
-from fit import fit_function
 from arena import Arena
-from config import NUM_OF_GENERATIONS
-from shapely import Polygon
+from config import NUM_OF_GENERATIONS, TARGET
+from dalle_2d_image import get_2d_image
 
 if __name__ == '__main__':
     progress = []
@@ -30,9 +29,11 @@ if __name__ == '__main__':
 
     
 #TODO:
-#1. center the shapes to take a head start
-#2. take the values from the coutnries and pased them as a single polygon
-#3. clean the code
-#4. create samples
-#5. do a blog on it on github
-#6. share it with the world
+#*. clean the code
+#*. create samples
+#*. do a blog on it on github
+#*. share it with the world
+ 
+ 
+#Done:
+#*. fix a bug in mutation overflow

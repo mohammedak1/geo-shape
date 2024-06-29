@@ -52,54 +52,6 @@ class Sample:
 
         return Sample(shapes)
 
-    def __mutate_rotation(self, shape, new_shape):
-        angle_percent = random.randint(1, 100)
-        angle_change_rate = 0
-        if angle_percent <= 1:
-            angle_change_rate = 30
-        elif angle_percent <= 2:
-            angle_change_rate = 15
-        elif angle_percent <= 4:
-            angle_change_rate = 5
-        elif angle_percent <= 9:
-            angle_change_rate = 2
-            
-        if angle_change_rate > 0:
-             angle_change = random.randint(-angle_change_rate, angle_change_rate)
-             new_angle = shape.angle + angle_change
-
-             new_shape.set_angle(new_angle)
-
-    def __mutate_location(self, shape, new_shape):
-        rate = self.change_rate
-        percent = random.randint(1, 100)
-        if percent <= 1:
-           rate *= 60  
-        elif percent <= 2:
-           rate *= 30 
-        elif percent <= 5:
-           rate *= 20 
-        elif percent <= 7:
-           rate *= 5 
-        elif percent <= 10:
-           rate *= 2
-        else:
-           rate = 0
-           
-        if rate > 0:
-            wild_x = random.randint(new_shape.get_x() - rate, new_shape.get_x() + rate)
-            wild_y = random.randint(new_shape.get_y() - rate, new_shape.get_y() + rate)
-
-            x = min(self.width ,max(0, wild_x)) 
-            y = min(self.height, max(0, wild_y))
-
-            centroid = shape.get_polygon().centroid  
-            dx =  x - centroid.x
-            dy =  y - centroid.y
-
-            new_shape.set_pos(dx, dy)
-
-
 class Shape:
     def __init__(self, multi_polygon, angle=0):
        print("shape", multi_polygon.shape)
