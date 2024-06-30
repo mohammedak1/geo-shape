@@ -9,7 +9,7 @@ if __name__ == '__main__':
     progress = []
     freeze_support()
     print("CPUS:", multiprocessing.cpu_count())
-    #get_2d_image(TARGET) 
+    get_2d_image(TARGET) 
     arena = Arena()
     for i in range(1, NUM_OF_GENERATIONS):
         print(f"---------------------------------------")

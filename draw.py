@@ -27,7 +27,7 @@ def full_draw(sample_shapes_ployes, shape_poly):
 
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.title('Polygons Visualization')
+    plt.title('Geo-Shape')
     plt.legend()
     plt.grid(True)
     plt.savefig("temp/res_full.png")
@@ -49,7 +49,7 @@ def sample_draw(sample_shapes_ployes):
 
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.title('Polygons Visualization')
+    plt.title('Geo-Shape')
     plt.legend()
     plt.grid(True)
     plt.savefig("temp/res_sample.png")

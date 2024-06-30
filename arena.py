@@ -52,9 +52,13 @@ class Arena:
         shape = self.samples.shape
         mutations = np.random.randint(-100, 2, size=(shape[0], shape[1], shape[3]))
         mutations =  np.where(mutations < -2, 0, np.clip(mutations, -2, 2))
+
         big_mutations = np.random.randint(-3000, 40, size=(shape[0], shape[1], shape[3]))
         big_mutations =  np.where(big_mutations < -40, 0, np.clip(big_mutations, -40, 40))
-        self.temp_samples = self.samples + mutations[:, :, np.newaxis, :] + big_mutations[:, :, np.newaxis, :]
+
+        hug_mutation = np.random.randint(-16000, 100, size=(shape[0], shape[1], shape[3]))
+        hug_mutation =  np.where(hug_mutation < -100, 0, np.clip(hug_mutation, -100, 100))
+        self.temp_samples = self.samples + mutations[:, :, np.newaxis, :] + big_mutations[:, :, np.newaxis, :] + hug_mutation[:, :, np.newaxis, :]
 
         x_overflow_max_pos = np.where(self.temp_samples[:, :, :, 0] > 250)
         x_overflow_min_pos = np.where(self.temp_samples[:, :, :, 0] < 0)

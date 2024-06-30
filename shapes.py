@@ -73,8 +73,6 @@ class Countires:
             np_coords[:, 0] = ((np_coords[:, 0] - min_long) / long_range) * x_scale
             np_coords[:, 1] = ((np_coords[:, 1] - min_lat) / lat_range) * y_scale
             #turn it into int
-            np_coords = np_coords.astype(np.float16)
-            print(np_coords)
 
             self.polygons[country] = Polygon(np_coords)
 
