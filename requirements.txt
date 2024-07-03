@@ -1,0 +1,10 @@
+python-dotenv
+opencv-python
+shapely
+openai
+matplotlib
+requests
+multiprocess
+numpy<2
+scipy
+joblib

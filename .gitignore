@@ -1,0 +1,7 @@
+__pycache__
+temp/*
+venv
+.env
+.vscode
+.old
+tests
